@@ -61,6 +61,7 @@ class recurring_payment:
 def simulate_portfolio(initial_value,
                        annual_rate_of_return,
                        annual_payments,
+                       mortgage,
                        start_year,
                        end_year,
                        num_simulations):
@@ -88,9 +89,18 @@ def simulate_portfolio(initial_value,
                 new_income += p.simulate_payment(year)
                 # Update payment value.
                 p.update_payment()
-            
+
+            # Add mortgage payment to payments.
+            if (mortgage is None or year < mortgage.start_year_ or
+                year >= mortgage.start_year_ + mortgage.mortgage_term_years_):
+                mortgage_payment = 0.0
+            else:
+                mortgage_payment = mortgage.get_annual_payment()
+            new_income -= mortgage_payment
+
             # Update value of assets.
             ror = annual_rate_of_return.get_simulated_value()
+
             if curr_values[-1] > 0:
                 new_value = (curr_values[-1] * ror) + new_income
             else:
