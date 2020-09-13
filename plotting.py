@@ -47,20 +47,23 @@ def plot_ci(x, ys, xlabel, ylabel, title, start_year, end_year):
     plt.show()
 
 
-def plot_two_ci(x, ys1, ys2, xlabel, ylabel, title, start_year, end_year, yrange=None):
+def plot_two_ci(x, ys1, ys2, label1, label2, xlabel, ylabel, title, start_year, end_year,
+                yrange=None, logy=False):
     lower_2s_1, lower_1s_1, median_1, upper_1s_1, upper_2s_1 = get_confidence_interval(ys1)
     lower_2s_2, lower_1s_2, median_2, upper_1s_2, upper_2s_2 = get_confidence_interval(ys2)
     fig, ax = plt.subplots(figsize=(10,5))
     years = range(start_year, end_year + 1, 1)
-    ax.plot(x, median_1, label='median value, with investment', color='g')
+    ax.plot(x, median_1, label=label1, color='g')
     ax.fill_between(years, lower_2s_1, upper_2s_1, facecolor='g', alpha=0.15, label='$\pm2\sigma$')
     ax.fill_between(years, lower_1s_1, upper_1s_1, facecolor='g', alpha=0.35, label='$\pm1\sigma$')
-    ax.plot(x, median_2, label='median value, no investment', color='b')
+    ax.plot(x, median_2, label=label2, color='b')
     ax.fill_between(years, lower_2s_2, upper_2s_2, facecolor='b', alpha=0.15, label='$\pm2\sigma$')
     ax.fill_between(years, lower_1s_2, upper_1s_2, facecolor='b', alpha=0.35, label='$\pm1\sigma$')
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
     if yrange:
       ax.set_ylim(yrange)
-    ax.legend(loc=2)
+    ax.legend(loc='best')
     ax.grid()
+    if logy:
+        plt.yscale('log')
     plt.show()
